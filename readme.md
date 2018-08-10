@@ -21,7 +21,7 @@ Display the product by ID<br/>
 `GET /api/v1/product/{sku}`<br/>
 `curl -H "Accept: application/json" "http://127.0.0.1:8000/api/v1/product/C99900217" | jq .`<br/>
 
-Display ids of all products with same size. Can variate list of fields, ex: fields=sku,name<br/>
+Display ids of all products with same size. _Can variate list of fields, ex: fields=sku,name_<br/>
 `GET /api/v1/products/?size={size}&fields=sku`<br/>
 `curl -H "Accept: application/json" "http://127.0.0.1:8000/api/v1/products?size=38&fields=sku" | jq .`<br/>
 
