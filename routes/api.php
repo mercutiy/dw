@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/products', 'ProductController@store');
-Route::get('/products', 'ProductController@index');
-Route::get('/product/{sku}', 'ProductController@show');
+Route::post('/v1/products', 'ProductController@store');
+Route::get('/v1/products', 'ProductController@index');
+Route::get('/v1/product/{sku}', 'ProductController@show');
 
-Route::get('/collections', 'CollectionController@index');
-Route::get('/collection/{id}/products', 'ProductController@collectionProducts');
+Route::get('/v1/collections', 'CollectionController@index');
+Route::get('/v1/collection/{id}/products', 'ProductController@collectionProducts');

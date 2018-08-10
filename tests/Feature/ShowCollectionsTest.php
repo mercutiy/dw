@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ShowCollectionsTest extends TestCase
 {
     public function testShowCollections() {
-        $response = $this->getJson('/api/collections');
+        $response = $this->getJson('/api/v1/collections');
         $response->assertStatus(200);
         $response->assertJsonStructure(
             [
@@ -23,12 +23,12 @@ class ShowCollectionsTest extends TestCase
     }
 
     public function testShowCollectionProductsNegative() {
-        $response = $this->getJson('/api/collection/DO_NOT_EXIST/products');
+        $response = $this->getJson('/api/v1/collection/DO_NOT_EXIST/products');
         $response->assertStatus(404);
     }
 
     public function testShowCollectionProductsPositive() {
-        $response = $this->getJson('/api/collection/classic-petite/products');
+        $response = $this->getJson('/api/v1/collection/classic-petite/products');
         $response->assertStatus(200);
         $response->assertJsonStructure(
             [

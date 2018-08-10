@@ -27,11 +27,19 @@ class ProductResource extends JsonResource
      * @return array
      */
     public function toArray($request) {
-        $res = [];
-        foreach (self::$showFields as $field) {
-            $res[$field] = $this->offsetGet($field);
-        }
-        return $res;
+        return $this->filterArray(
+            [
+                Product::FIELD_SKU => $this->offsetGet(Product::FIELD_SKU),
+                Product::FIELD_NAME => $this->offsetGet(Product::FIELD_NAME),
+                Product::FIELD_IMAGE => $this->offsetGet(Product::FIELD_IMAGE),
+                Product::FIELD_COLLECTION => $this->offsetGet(Product::FIELD_COLLECTION),
+                Product::FIELD_SIZE => (int)$this->offsetGet(Product::FIELD_SIZE),
+            ]
+        );
+    }
+
+    private function filterArray(array $fields) : array {
+        return array_intersect_key($fields, array_flip(self::$showFields));
     }
 
     public static function onlyFields(array $fields) {

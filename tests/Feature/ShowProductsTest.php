@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ShowProductsTest extends TestCase
 {
     public function testShowProducts() {
-        $response = $this->getJson('/api/products');
+        $response = $this->getJson('/api/v1/products');
         $response->assertStatus(200);
         $response->assertJsonStructure(
             [
@@ -25,7 +25,7 @@ class ShowProductsTest extends TestCase
     }
 
     public function testShowProductsSize() {
-        $response = $this->getJson('/api/products?size=38&fields=sku');
+        $response = $this->getJson('/api/v1/products?size=38&fields=sku');
         $response->assertStatus(200);
         $response->assertJsonStructure(
             [

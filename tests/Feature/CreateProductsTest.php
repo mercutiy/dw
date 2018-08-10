@@ -11,7 +11,7 @@ class CreateProductsTest extends TestCase
     public function testCreateNegative()
     {
         $response = $this->postJson(
-            '/api/products',
+            '/api/v1/products',
             [
                 [
                     'collection' => 'classic-petite',
@@ -33,7 +33,7 @@ class CreateProductsTest extends TestCase
     public function testCreatePositive()
     {
         $response = $this->postJson(
-            '/api/products',
+            '/api/v1/products',
             [
                 [
                     'collection' => 'classic-petite',
@@ -83,7 +83,7 @@ class CreateProductsTest extends TestCase
      */
     public function testCreatePositive2()
     {
-        $response = $this->getJson('/api/product/RT88400084');
+        $response = $this->getJson('/api/v1/product/RT88400084');
         $response->assertStatus(200);
         $response->assertExactJson(
             [
@@ -104,7 +104,7 @@ class CreateProductsTest extends TestCase
     public function testUpdatePositive()
     {
         $response = $this->postJson(
-            '/api/products',
+            '/api/v1/products',
             [
                 [
                     'collection' => 'dapper',
@@ -127,7 +127,7 @@ class CreateProductsTest extends TestCase
      */
     public function testUpdatePositive2()
     {
-        $response = $this->getJson('/api/product/RT88400084');
+        $response = $this->getJson('/api/v1/product/RT88400084');
         $response->assertStatus(200);
         $response->assertExactJson(
             [

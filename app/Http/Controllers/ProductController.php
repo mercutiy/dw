@@ -9,6 +9,7 @@ use App\Repository\Product as Repository;
 use App\Repository\Product as Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ProductController extends Controller
 {
@@ -44,31 +45,25 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws BadRequestHttpException
      */
     public function store(Request $request) {
         if (!$request->isJson()) {
-            return response()->json(['error' => 'Bad request'], 400);
+            throw new BadRequestHttpException();
         }
 
         $json = $request->json();
         if (!$json instanceof ParameterBag || !$json->count()) {
-            return response()->json(['error' => 'Malformed JSON provided'], 400);
+            throw new BadRequestHttpException('Malformed JSON provided');
         }
 
-        try {
-            foreach ($this->processProduct($json->all()) as $product) {
-                $this->getRepository()->replaceProduct(
-                    $product['sku'],
-                    $product['name'],
-                    $product['image'],
-                    $product['collection'],
-                    $product['size']
-                );
-            }
-        } catch (WrongJsonStructure $e) {
-            return response()->json(
-                ['error' => $e->getMessage() ?: 'Wrong JSON structure'],
-                400
+        foreach ($this->processProduct($json->all()) as $product) {
+            $this->getRepository()->replaceProduct(
+                $product['sku'],
+                $product['name'],
+                $product['image'],
+                $product['collection'],
+                $product['size']
             );
         }
 
@@ -80,13 +75,10 @@ class ProductController extends Controller
      *
      * @param  string  $sku
      * @return \Illuminate\Http\JsonResponse
+     * @throws ModelNotFoundException
      */
     public function show(string $sku) {
-        try {
-            $product = $this->getRepository()->getBySky($sku);
-        } catch (ModelNotFoundException $e ) {
-            return response()->json(['error' => 'Resource not found'], 404);
-        }
+        $product = $this->getRepository()->getBySky($sku);
 
         ProductResource::allFields();
         return (new ProductResource($product))->response();
@@ -97,11 +89,12 @@ class ProductController extends Controller
      *
      * @param string $collection
      * @return \Illuminate\Http\JsonResponse
+     * @throws ModelNotFoundException
      */
     public function collectionProducts(string $collection) {
         $products = $this->getRepository()->getCollection($collection);
         if (!$products->count()) {
-            return response()->json(['error' => 'Resource not found'], 404);
+            throw new ModelNotFoundException();
         }
 
         return ProductResource::collection($products)->response();
@@ -112,7 +105,7 @@ class ProductController extends Controller
      *
      * @param array $json
      * @return array
-     * @throws WrongJsonStructure
+     * @throws BadRequestHttpException
      */
     private function processProduct(array $json) : array {
         $productLst = [];
@@ -122,7 +115,7 @@ class ProductController extends Controller
             $products = (array)($collection['products'] ?? []);
 
             if (empty($collectionName) || empty($size)) {
-                throw new WrongJsonStructure();
+                throw new BadRequestHttpException('Wrong JSON structure');
             }
 
             foreach ($products as $product) {
@@ -130,11 +123,11 @@ class ProductController extends Controller
                 $name = trim($product['name'] ?? '');
                 $sku = trim($product['sku'] ?? '');
                 if (empty($image) || empty($name) || empty($sku)) {
-                    throw new WrongJsonStructure();
+                    throw new BadRequestHttpException('Wrong JSON structure');
                 }
 
                 if (isset($productLst[$sku])) {
-                    throw new WrongJsonStructure('The sku field must be unique');
+                    throw new BadRequestHttpException('The sku field must be unique');
                 }
 
                 $productLst[$sku] = [
