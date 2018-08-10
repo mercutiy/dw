@@ -29,7 +29,7 @@ class ProductResource extends JsonResource
     public function toArray($request) {
         $res = [];
         foreach (self::$showFields as $field) {
-            $res[$field] = $this->__get($field);
+            $res[$field] = $this->offsetGet($field);
         }
         return $res;
     }

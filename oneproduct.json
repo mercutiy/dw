@@ -1,0 +1,13 @@
+[
+  {
+    "collection": "test",
+    "size": 12,
+    "products": [
+      {
+        "image": "test",
+        "name": "test",
+        "sku": "C99900217"
+      }
+    ]
+  }
+]

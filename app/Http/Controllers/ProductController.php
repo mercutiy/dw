@@ -66,7 +66,10 @@ class ProductController extends Controller
                 );
             }
         } catch (WrongJsonStructure $e) {
-            return response()->json(['error' => 'Wrong JSON structure'], 400);
+            return response()->json(
+                ['error' => $e->getMessage() ?: 'Wrong JSON structure'],
+                400
+            );
         }
 
         return response()->json(null,201);
@@ -130,7 +133,11 @@ class ProductController extends Controller
                     throw new WrongJsonStructure();
                 }
 
-                $productLst[] = [
+                if (isset($productLst[$sku])) {
+                    throw new WrongJsonStructure('The sku field must be unique');
+                }
+
+                $productLst[$sku] = [
                     'sku' => $sku,
                     'name' => $name,
                     'image' => $image,
