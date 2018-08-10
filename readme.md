@@ -27,7 +27,7 @@ Display ids of all products with same size. Can variate list of fields, ex: fiel
 
 Display all collections<br/>
 `GET /api/v1/collections/`<br/>
-curl -H "Accept: application/json" "http://127.0.0.1:8000/api/v1/collections" | jq .`<br/>
+`curl -H "Accept: application/json" "http://127.0.0.1:8000/api/v1/collections" | jq .`<br/>
 
 Display all products of given collections<br/>
 `GET /api/v1/collection/{id}/products`<br/>
